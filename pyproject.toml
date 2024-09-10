@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>61.0", "wheel", "pybind11>=2.13", "setuptools_scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "itosolver"
+dynamic = ["version"]
+description="A Python interface to the Heston model"
+requires-python = ">=3.8"
+authors = [{name = "Faisal Jayousi", email = "fjayousi90@gmail.com"}]
+maintainers = [{name = "Faisal Jayousi", email = "fjayousi90@gmail.com"}]
+license = {file = "LICENSE"}
+classifiers = [
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: C++",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3"]
+
+[project.optional-dependencies]
+test = ["pytest"]
+dev = ["pytest", "mypy", "black", "setuptools_scm"]
