@@ -16,7 +16,9 @@ void init_bindings(py::module &m)
           py::arg("bounds"),
           py::arg("N"),
           py::arg("X0"),
-          py::arg("num_sims")),
+          py::arg("num_sims"),
+          py::kw_only(),
+          py::arg("seed") = std::time(nullptr)),
         py::call_guard<py::gil_scoped_release>();
 }
 

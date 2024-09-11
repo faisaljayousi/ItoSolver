@@ -18,7 +18,10 @@ array_t euler_maruyama(std::function<double(double)> f,
                        array_t bounds,
                        int N,
                        double X0,
-                       int num_sims);
+                       int num_sims,
+                       unsigned long seed);
+
+std::mt19937 initialise_generator(unsigned long seed = -1);
 
 void initialise_array(array_t &arr, double val, int num_sims);
 

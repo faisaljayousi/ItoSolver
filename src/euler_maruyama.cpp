@@ -9,12 +9,26 @@ void initialise_array(array_t &arr, double val, int num_sims)
     }
 }
 
+std::mt19937 initialise_generator(unsigned long seed = -1)
+{
+    if (seed == -1)
+    {
+        std::random_device rd;
+        return std::mt19937{rd()};
+    }
+    else
+    {
+        return std::mt19937{seed};
+    }
+}
+
 array_t euler_maruyama(std::function<double(double)> f,
                        std::function<double(double)> g,
                        array_t bounds,
                        int N,
                        double X0,
-                       int num_sims)
+                       int num_sims,
+                       unsigned long seed = -1)
 {
     // Logic checks
     checkBounds(bounds);
@@ -23,8 +37,6 @@ array_t euler_maruyama(std::function<double(double)> f,
     auto output = output_array.mutable_unchecked<2>();
     initialise_array(output_array, X0, num_sims);
 
-    // output(0, 0) = X0;
-
     double lb{static_cast<double>(bounds.at(0))};
     double ub{static_cast<double>(bounds.at(1))};
     double length{ub - lb};
@@ -32,15 +44,15 @@ array_t euler_maruyama(std::function<double(double)> f,
     double dt{length / N};
 
     // Initialise generator
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    auto gen{initialise_generator(seed)};
+    // std::random_device rd;
+    // std::mt19937 gen{rd()};
     std::normal_distribution<double> d(0.0, std::sqrt(dt));
 
-    for (int n = 1; n < num_sims; ++n)
+    for (int n = 0; n < num_sims; ++n)
     {
         for (int i = 1; i < N; ++i)
         {
-            // double t = ub + (i - 1) * dt;
             auto xn = output(n, i - 1);
             output(n, i) = xn + f(xn) * dt + d(gen) * g(xn);
         }
