@@ -21,9 +21,9 @@ array_t euler_maruyama(std::function<double(double)> f,
                        int num_sims,
                        unsigned long seed);
 
-std::mt19937 initialise_generator(unsigned long seed = -1);
+std::mt19937 initialise_generator(std::optional<unsigned long> seed);
 
-void initialise_array(array_t &arr, double val, int num_sims);
+void initialise_array(auto &arr, double val, int num_sims);
 
 void checkBounds(const array_t &bounds);
 

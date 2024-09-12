@@ -1,52 +1,29 @@
 #include "euler_maruyama.h"
 
-void initialise_array(array_t &arr, double val, int num_sims)
-{
-    auto mutable_arr = arr.mutable_unchecked<2>();
-    for (int i = 0; i < num_sims; ++i)
-    {
-        mutable_arr(i, 0) = val;
-    }
-}
-
-std::mt19937 initialise_generator(unsigned long seed = -1)
-{
-    if (seed == -1)
-    {
-        std::random_device rd;
-        return std::mt19937{rd()};
-    }
-    else
-    {
-        return std::mt19937{seed};
-    }
-}
-
 array_t euler_maruyama(std::function<double(double)> f,
                        std::function<double(double)> g,
                        array_t bounds,
                        int N,
                        double X0,
                        int num_sims,
-                       unsigned long seed = -1)
+                       unsigned long seed)
 {
     // Logic checks
     checkBounds(bounds);
 
     array_t output_array({num_sims, N});
     auto output = output_array.mutable_unchecked<2>();
-    initialise_array(output_array, X0, num_sims);
+    initialise_array(output, X0, num_sims);
 
-    double lb{static_cast<double>(bounds.at(0))};
-    double ub{static_cast<double>(bounds.at(1))};
+    auto bounds_unchecked = bounds.unchecked<1>();
+    double lb{static_cast<double>(bounds_unchecked(0))};
+    double ub{static_cast<double>(bounds_unchecked(1))};
+
     double length{ub - lb};
-
     double dt{length / N};
 
     // Initialise generator
     auto gen{initialise_generator(seed)};
-    // std::random_device rd;
-    // std::mt19937 gen{rd()};
     std::normal_distribution<double> d(0.0, std::sqrt(dt));
 
     for (int n = 0; n < num_sims; ++n)
@@ -76,5 +53,26 @@ void checkBounds(const array_t &bounds)
     if (lb >= ub)
     {
         throw std::invalid_argument("Lower bound must be less than upper bound.");
+    }
+}
+
+void initialise_array(auto &arr, double val, int num_sims)
+{
+    for (int i = 0; i < num_sims; ++i)
+    {
+        arr(i, 0) = val;
+    }
+}
+
+std::mt19937 initialise_generator(std::optional<unsigned long> seed = std::nullopt)
+{
+    if (seed.has_value() && seed.value() != 0)
+    {
+        return std::mt19937{seed.value()};
+    }
+    else
+    {
+        std::random_device rd;
+        return std::mt19937{rd()};
     }
 }
