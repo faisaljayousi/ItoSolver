@@ -21,17 +21,18 @@ array_t euler_maruyama(std::function<double(double)> f,
 
     double length{ub - lb};
     double dt{length / N};
+    double sqrt_dt{std::sqrt(dt)};
 
     // Initialise generator
     auto gen{initialise_generator(seed)};
-    std::normal_distribution<double> d(0.0, std::sqrt(dt));
+    std::normal_distribution<double> d(0.0, 1.0);
 
     for (int n = 0; n < num_sims; ++n)
     {
         for (int i = 1; i < N; ++i)
         {
             auto xn = output(n, i - 1);
-            output(n, i) = xn + f(xn) * dt + d(gen) * g(xn);
+            output(n, i) = xn + f(xn) * dt + sqrt_dt * d(gen) * g(xn);
         }
     }
 

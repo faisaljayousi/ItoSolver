@@ -4,8 +4,6 @@
 #include "euler_maruyama.h"
 #include "euler_maruyama_py.h"
 
-namespace py = pybind11;
-
 void init_bindings(py::module &m)
 {
     m.doc() = "SDE Solver";
