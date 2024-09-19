@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "itosolver"
 dynamic = ["version"]
-description="A Python interface to the Heston model"
+description="A Python interface to the SDE discretisation methods"
 requires-python = ">=3.8"
 authors = [{name = "Faisal Jayousi", email = "fjayousi90@gmail.com"}]
 maintainers = [{name = "Faisal Jayousi", email = "fjayousi90@gmail.com"}]

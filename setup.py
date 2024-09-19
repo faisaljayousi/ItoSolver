@@ -6,13 +6,14 @@ import pybind11
 from setuptools import Extension, setup
 
 # Constants and configuration
-MODULE_NAME = "itosolver"
-INCLUDE_PATH = Path("include")
+IMPORT_NAME = "itosolver"
+MODULE_NAME = "ItoSolver"
+INCLUDE_PATH = Path(MODULE_NAME, "include")
 DEFAULT_OPT_LEVEL = "-O3"
 SUPPORTED_OPT_LEVELS = ["-O0", "-O1", "-O2", "-O3", "-Ofast"]
 
 # Retrieve and set optimisation level
-OPT_LEVEL = os.getenv("OPT_LEVEL", DEFAULT_OPT_LEVEL).upper()
+OPT_LEVEL = os.getenv("OPT_LEVEL", DEFAULT_OPT_LEVEL)
 if OPT_LEVEL not in SUPPORTED_OPT_LEVELS:
     warnings.warn(
         f"Warning: Unrecognised optimisation level '{OPT_LEVEL}'. "
@@ -22,7 +23,7 @@ if OPT_LEVEL not in SUPPORTED_OPT_LEVELS:
     OPT_LEVEL = DEFAULT_OPT_LEVEL
 
 # Paths to source files
-src_dir = Path("src")
+src_dir = Path(MODULE_NAME, "src")
 source_files = [src_dir / "euler_maruyama.cpp",
                 src_dir / "euler_maruyama_py.cpp",
 ]
@@ -30,7 +31,7 @@ source_files = [src_dir / "euler_maruyama.cpp",
 # Define extension module
 ext_modules = [
     Extension(
-        name=MODULE_NAME,
+        name=IMPORT_NAME,
         sources=[str(src) for src in source_files],
         include_dirs=[
             str(INCLUDE_PATH),

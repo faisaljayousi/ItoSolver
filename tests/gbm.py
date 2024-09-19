@@ -57,7 +57,7 @@ def main():
         plot_results(t, solution_mean, paths_mean, save_fig=True)
 
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.error(f"An error occurred: {e}.")
 
 
 def f(x, mu):
