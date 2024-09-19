@@ -1,8 +1,8 @@
 #ifndef EULER_MARUYAMA_PY
 #define EULER_MARUYAMA_PY
 
-#include "euler_maruyama.h"
 #include "euler_maruyama_py.h"
+#include "euler_maruyama.h"
 
 void init_bindings(py::module &m)
 {

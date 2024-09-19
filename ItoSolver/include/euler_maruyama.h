@@ -1,15 +1,15 @@
 #ifndef EULER_MARUYAMA_H
 #define EULER_MARUYAMA_H
 
-#include <iostream>
 #include <functional>
-#include <random>
-#include <stdexcept>
-#include <pybind11/pybind11.h>
-#include <pybind11/numpy.h>
+#include <iostream>
+#include <pybind11/chrono.h>
 #include <pybind11/complex.h>
 #include <pybind11/functional.h>
-#include <pybind11/chrono.h>
+#include <pybind11/numpy.h>
+#include <pybind11/pybind11.h>
+#include <random>
+#include <stdexcept>
 
 using array_t = pybind11::array_t<double>;
 
