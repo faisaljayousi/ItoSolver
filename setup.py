@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pybind11
 from setuptools import Extension, setup
+from torch.utils import cpp_extension
 
-# Constants and configuration
 IMPORT_NAME = "itosolver"
 MODULE_NAME = "ItoSolver"
 INCLUDE_PATH = Path(MODULE_NAME, "include")
@@ -19,13 +19,16 @@ if OPT_LEVEL not in SUPPORTED_OPT_LEVELS:
         f"Warning: Unrecognised optimisation level '{OPT_LEVEL}'. "
         f"Defaulting to {DEFAULT_OPT_LEVEL}.",
         UserWarning,
+        stacklevel=1,
     )
     OPT_LEVEL = DEFAULT_OPT_LEVEL
 
 # Paths to source files
 src_dir = Path(MODULE_NAME, "src")
-source_files = [src_dir / "euler_maruyama.cpp",
-                src_dir / "euler_maruyama_py.cpp",
+source_files = [
+    src_dir / "euler_maruyama.cpp",
+    src_dir / "bindings.cpp",
+    src_dir / "ula.cpp",
 ]
 
 # Define extension module
@@ -36,11 +39,12 @@ ext_modules = [
         include_dirs=[
             str(INCLUDE_PATH),
             pybind11.get_include(),
-            '/usr/include/eigen3',
+            *cpp_extension.include_paths(),
         ],
         libraries=["gsl", "gslcblas"],
+        library_dirs=cpp_extension.library_paths(),
         language="c++",
-        extra_compile_args=[OPT_LEVEL, "-Wall", "-std=c++17"],
+        extra_compile_args=[OPT_LEVEL, "-Wall", "-std=c++17", "-fconcepts"],
     ),
 ]
 

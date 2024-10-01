@@ -3,7 +3,7 @@ __pycache__/
 .pytest_cache/
 
 # Version file
-src/_version.py
+ItoSolver/_version.py
 
 # Build artefacts
 build/
@@ -29,5 +29,6 @@ venv/
 *.log
 *.tmp
 
-# Todo
+# Todo & Checkpoints
 TODO.md
+_checkpoints/
