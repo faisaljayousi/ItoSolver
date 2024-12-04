@@ -1,14 +1,25 @@
+import logging
 import os
 
 import matplotlib.pyplot as plt
 import numpy as np
 
 
+def setup_logging(level=logging.INFO):
+    logging.basicConfig(
+        level=level, format="%(asctime)s - %(levelname)s - %(message)s"
+    )
+
+
 def compute_error(analytic_solution_mean, euler_maruyama_mean):
     """Computes the error between the analytic solution and the
     Euler-Maruyama simulation."""
-    mean_error_path = np.abs(euler_maruyama_mean - analytic_solution_mean).mean()
-    final_time_error = np.abs(euler_maruyama_mean[-1] - analytic_solution_mean[-1])
+    mean_error_path = np.abs(
+        euler_maruyama_mean - analytic_solution_mean
+    ).mean()
+    final_time_error = np.abs(
+        euler_maruyama_mean[-1] - analytic_solution_mean[-1]
+    )
 
     error_estimates = {
         "path_error": mean_error_path,
@@ -44,7 +55,9 @@ def plot_results(
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    plt.plot(t, euler_maruyama_mean, label="Euler-Maruyama Mean Path", color="blue")
+    plt.plot(
+        t, euler_maruyama_mean, label="Euler-Maruyama Mean Path", color="blue"
+    )
     plt.plot(
         t,
         analytic_solution_mean,
@@ -53,7 +66,7 @@ def plot_results(
         color="orange",
     )
     plt.xlabel("$t$")
-    plt.ylabel("$X_t")
+    plt.ylabel("$X_t$")
     plt.legend()
     plt.grid(True)
 
@@ -106,5 +119,5 @@ def save_figure(file, format="png"):
     try:
         plt.savefig(save_path, format=format)
         print(f"Figure saved successfully at: {save_path}")
-    except Exception as e:
+    except (OSError, ValueError) as e:
         print(f"Error saving figure: {e}")

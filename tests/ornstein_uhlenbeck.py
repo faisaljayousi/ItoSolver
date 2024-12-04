@@ -18,9 +18,10 @@ def main():
 
     # Simulation parameters
     config = {
-        "mu": 2.0,  # Drift coefficient
-        "sigma": 0.2,  # Volatility (diffusion) coefficient
-        "X0": 1,  # Initial value
+        "kappa": 0.4,
+        "sigma": 0.2,
+        "theta": 0.0,
+        "X0": 1.0,  # Initial value
         "bounds": [0.0, 1.0],  # Time interval [start, end]
         "num_paths": 1000,  # Number of simulated paths
         "N": 10000,  # Number of time steps
@@ -31,7 +32,8 @@ def main():
     # Run simulation
     logging.info("Running simulation...")
     solution, paths = run_simulation(
-        config["mu"],
+        config["kappa"],
+        config["theta"],
         config["sigma"],
         config["X0"],
         config["bounds"],
@@ -54,31 +56,51 @@ def main():
     plot_results(t, solution_mean, paths_mean, save_fig=True)
 
 
-def f(x, mu):
+def f(x, kappa, theta):
     """Drift term function"""
-    return mu * x
+    return kappa * (theta - x)
 
 
 def g(x, sigma):
     """Diffusion term function"""
-    return sigma * x
+    return sigma
 
 
-def analytic_solution(dt, mu, sigma, X0, N, num_sims):
+def analytic_solution(dt, kappa, theta, sigma, X0, N, num_sims):
+    """
+    Compute the analytical solution for the Ornstein-Uhlenbeck process.
+    """
+    # Time array
+    t = np.linspace(0, dt * (N - 1), N)
+
+    # Generate Wiener process
     W = wiener_process(dt, N, num_sims)
-    t = np.linspace(0, dt * N, N)
-    return X0 * np.exp((mu - 0.5 * sigma ** 2) * t + sigma * W)
+
+    drift = X0 * np.exp(-kappa * t) + theta * (1 - np.exp(-kappa * t))
+
+    diffusion = (
+        sigma * np.sqrt((1 - np.exp(-2 * kappa * t)) / (2 * kappa)) * W
+    )
+
+    # Combine drift and diffusion
+    solution = drift + diffusion
+    return solution
 
 
-def run_simulation(mu, sigma, X0, bounds, N, num_paths):
+def run_simulation(kappa, theta, sigma, X0, bounds, N, num_paths):
     dt = (bounds[1] - bounds[0]) / N
 
     # Compute solution
-    solution = analytic_solution(dt, mu, sigma, X0, N, num_paths)
+    solution = analytic_solution(dt, kappa, theta, sigma, X0, N, num_paths)
 
     # Euler-Maruyama
     paths = itosolver.euler_maruyama(
-        lambda x: f(x, mu), lambda x: g(x, sigma), bounds, N, X0, num_paths
+        lambda x: f(x, kappa, theta),
+        lambda x: g(x, sigma),
+        bounds,
+        N,
+        X0,
+        num_paths,
     )
 
     return solution, paths

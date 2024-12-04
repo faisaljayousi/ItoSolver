@@ -14,12 +14,8 @@
 using array_t = pybind11::array_t<double>;
 
 array_t euler_maruyama(std::function<double(double)> f,
-                       std::function<double(double)> g,
-                       array_t bounds,
-                       int N,
-                       double X0,
-                       int num_sims,
-                       unsigned long seed);
+                       std::function<double(double)> g, array_t bounds, int N,
+                       double X0, int num_sims, unsigned long seed);
 
 std::mt19937 initialise_generator(std::optional<unsigned long> seed);
 
