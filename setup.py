@@ -2,9 +2,9 @@ import os
 import warnings
 from pathlib import Path
 
-import pybind11
 from setuptools import Extension, setup
 from torch.utils import cpp_extension
+from torch.utils.cpp_extension import BuildExtension
 
 IMPORT_NAME = "itosolver"
 MODULE_NAME = "ItoSolver"
@@ -38,18 +38,20 @@ ext_modules = [
         sources=[str(src) for src in source_files],
         include_dirs=[
             str(INCLUDE_PATH),
-            pybind11.get_include(),
-            *cpp_extension.include_paths(),
+            cpp_extension.include_paths(),
         ],
-        libraries=["gsl", "gslcblas"],
-        library_dirs=cpp_extension.library_paths(),
         language="c++",
-        extra_compile_args=[OPT_LEVEL, "-Wall", "-std=c++17", "-fconcepts"],
+        extra_compile_args=[
+            OPT_LEVEL,
+            "-Wall",
+            "-std=c++17",
+        ],
     ),
 ]
 
 # Setup configuration
 setup(
     ext_modules=ext_modules,
+    cmdclass={"build_ext": BuildExtension},
     zip_safe=False,
 )

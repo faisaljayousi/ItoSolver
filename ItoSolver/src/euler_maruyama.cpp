@@ -1,12 +1,8 @@
 #include "euler_maruyama.h"
 
 array_t euler_maruyama(std::function<double(double)> f,
-                       std::function<double(double)> g,
-                       array_t bounds,
-                       int N,
-                       double X0,
-                       int num_sims,
-                       unsigned long seed)
+                       std::function<double(double)> g, array_t bounds, int N,
+                       double X0, int num_sims, unsigned long seed)
 {
     // Logic checks
     checkBounds(bounds);
@@ -45,7 +41,8 @@ void checkBounds(const array_t &bounds)
 
     if (size != 2)
     {
-        throw std::invalid_argument("Argument bounds must be 2D. Got " + std::to_string(size) + ".");
+        throw std::invalid_argument("Argument bounds must be 2D. Got " +
+                                    std::to_string(size) + ".");
     }
 
     double lb = static_cast<double>(bounds.at(0));
@@ -65,7 +62,8 @@ void initialise_array(auto &arr, double val, int num_sims)
     }
 }
 
-std::mt19937 initialise_generator(std::optional<unsigned long> seed = std::nullopt)
+std::mt19937
+initialise_generator(std::optional<unsigned long> seed = std::nullopt)
 {
     if (seed.has_value() && seed.value() != 0)
     {
